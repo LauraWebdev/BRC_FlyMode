@@ -5,6 +5,10 @@
 *.suo
 *.user
 *.sln.docstates
+.idea/
+
+# Game files
+libs/
 
 # Build results
 
