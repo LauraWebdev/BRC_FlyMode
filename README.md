@@ -1,10 +1,10 @@
-# BRC-FlyMode
+# BRC_FlyMode
 A Bomb Rush Cyberfunk mod that adds a simple fly mode.
 
 ## Installation
 
 ### Through ThunderStore/R2ModMan
-### [THUNDERSTORE (CAN BE USED ON R2MODMAN)](https://thunderstore.io/c/bomb-rush-cyberfunk/p/Kade/BombRushRadio/)
+- Download the mod through Thunderstore or R2ModMan
 
 ### Manually
 - You must have BepInEx 5.4 already installed.
