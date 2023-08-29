@@ -4,7 +4,7 @@ A Bomb Rush Cyberfunk mod that adds a simple fly mode.
 ## Installation
 
 ### Through ThunderStore/R2ModMan
-- Download the mod through Thunderstore or R2ModMan
+- Download the mod through [Thunderstore](https://thunderstore.io/c/bomb-rush-cyberfunk/p/LauraSofia/BRC_FlyMode/) or R2ModMan
 
 ### Manually
 - You must have BepInEx 5.4 already installed.
