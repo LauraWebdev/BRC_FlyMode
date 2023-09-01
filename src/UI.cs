@@ -10,7 +10,7 @@ public class UI : MonoBehaviour
     public static UI Instance = null!;
     private TextMeshProUGUI m_label = null!;
     private float m_notificationTimer = 5f;
-    private bool m_active = false;
+    private bool m_active;
 
     private void Awake()
     {

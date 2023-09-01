@@ -9,7 +9,6 @@ using BepInEx;
 [BepInProcess("Bomb Rush Cyberfunk.exe")]
 public class FlyMode : BaseUnityPlugin
 {
-    public static ManualLogSource Log = null!;
     public static Harmony Harmony = null!;
     
     internal static FlyMode Instance { get; private set; } = null;

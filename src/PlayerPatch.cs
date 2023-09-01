@@ -1,5 +1,6 @@
 namespace moe.taw.BRC.FlyMode;
 
+using System.Collections.Generic;
 using HarmonyLib;
 using Reptile;
 using UnityEngine;
@@ -7,8 +8,10 @@ using UnityEngine;
 [HarmonyPatch(typeof(Player))]
 public class PlayerPatch
 {
-    private static bool m_Active = false;
+    private static bool m_flyModeActive;
+    private static bool m_playerModelActive = true;
     private static float m_flySpeed = 15f;
+    private static List<Renderer> m_previouslyEnabled = new();
     
     [HarmonyPostfix]
     [HarmonyPatch("UpdatePlayer")]
@@ -17,38 +20,43 @@ public class PlayerPatch
         var isAI = (bool)Traverse.Create(__instance).Field("isAI").GetValue();
         if (isAI) return;
         
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Changing FlyMode");
             
-            m_Active = !m_Active;
+            m_flyModeActive = !m_flyModeActive;
             SetPlayerState(__instance);
         }
 
-        if (m_Active)
+        if (m_flyModeActive)
         {
             UpdateFlymode(__instance);
-        }
 
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
-        {
-            // Faster
-            m_flySpeed += 100f * Time.deltaTime;
-            UI.Instance.ShowNotification($"Speed: {m_flySpeed}");
-        }
-        if (Input.GetAxis("Mouse ScrollWheel") < 0f && m_flySpeed > 0.1f)
-        {
-            // Slower
-            m_flySpeed -= 100f * Time.deltaTime;
-            UI.Instance.ShowNotification($"Speed: {m_flySpeed}");
+            if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.O))
+            {
+                TogglePlayerModelVisibility(__instance);
+            }
+
+            if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+            {
+                // Faster
+                m_flySpeed += 200f * Time.deltaTime;
+                UI.Instance.ShowNotification($"Speed: {m_flySpeed}");
+            }
+            if (Input.GetAxis("Mouse ScrollWheel") < 0f && m_flySpeed > 0.1f)
+            {
+                // Slower
+                m_flySpeed -= 200f * Time.deltaTime;
+                UI.Instance.ShowNotification($"Speed: {m_flySpeed}");
+            }
         }
     }
 
     private static void SetPlayerState(Player __instance)
     {
-        Debug.Log($"SetPlayerState: active={m_Active}");
+        Debug.Log($"SetPlayerState: active={m_flyModeActive}");
         
-        if (m_Active)
+        if (m_flyModeActive)
         {
             Debug.Log("Enabling FlyMode");
             
@@ -75,6 +83,11 @@ public class PlayerPatch
         else
         {
             Debug.Log("Disabling FlyMode");
+
+            if (!m_playerModelActive)
+            {
+                TogglePlayerModelVisibility(__instance);
+            }
             
             __instance.motor.SetKinematic(false);
 
@@ -132,6 +145,43 @@ public class PlayerPatch
     [HarmonyPatch("ActivateAbility")]
     public static void ActivateAbility(Player __instance, Ability a)
     {
-        if (m_Active) return;
+        if (m_flyModeActive) return;
+    }
+
+    public static void TogglePlayerModelVisibility(Player __instance)
+    {
+        m_playerModelActive = !m_playerModelActive;
+
+        if (m_playerModelActive)
+        {
+            Debug.Log("Show PlayerModel");
+            UI.Instance.ShowNotification("PlayerModel Visible");
+            
+            // Reenable all renderers who were previously enabled.
+            foreach (var renderer in m_previouslyEnabled)
+            {
+                renderer.enabled = true;
+            }
+
+            m_previouslyEnabled.Clear();
+        }
+        else
+        {
+            Debug.Log("Hide PlayerModel");
+            UI.Instance.ShowNotification("PlayerModel Hidden");
+            
+            // Disable all renderers on player and store a reference for reactivation
+            m_previouslyEnabled.Clear();
+            var renderers = __instance.GetComponentsInChildren<Renderer>();
+
+            foreach (var renderer in renderers)
+            {
+                // Skip disabled renderers
+                if (!renderer.enabled) continue;
+                
+                renderer.enabled = false;
+                m_previouslyEnabled.Add(renderer);
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "BRC_FlyMode",
-    "version_number": "1.0.0",
+    "version_number": "1.1.0",
     "website_url": "https://github.com/LauraWebdev/BRC_FlyMode",
     "description": "A Bomb Rush Cyberfunk mod that adds a simple fly mode.",
     "dependencies": ["BepInEx-BepInExPack-5.4.2100"]

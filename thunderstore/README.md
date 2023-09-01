@@ -15,9 +15,12 @@ A Bomb Rush Cyberfunk mod that adds a simple fly mode.
 Once you are ingame, you can press "Enter" on your keypad to enable flymode.
 
 ### Controls
+- **Enter (Keypad) / P** - Activate/Deactivate FlyMode
+- **Plus (Keypad) / O** - Enable/Disable PlayerModel
 - **WASD** - Forward/Backward/Left/Right
 - **Space** - Up
 - **Shift** - Down
+- **ScrollWheel** - Increase/Decrease fly speed
 
 ## Building from source
 To build this project from source, you need to place the following dll files from the game in a folder named "libs":
